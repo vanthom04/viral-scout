@@ -12,17 +12,19 @@ export interface CloudflareEnv {
   SCRAPER_QUEUE: Queue
 
   // Auth
-  AUTH_SECRET: string
-  NEXTAUTH_URL: string
+  BETTER_AUTH_SECRET: string
+  BETTER_AUTH_URL: string
 
-  // Platform API Keys
-  REDDIT_CLIENT_ID: string
-  REDDIT_CLIENT_SECRET: string
+  // YouTube
   YOUTUBE_API_KEY: string
-  TWITTER_BEARER_TOKEN: string
-  TIKTOK_API_KEY: string
-  PROXYCURL_API_KEY: string // LinkedIn
 
-  // Optional: Facebook Graph API
+  // TikTok Research API (OAuth2 client credentials)
+  TIKTOK_CLIENT_KEY: string
+  TIKTOK_CLIENT_SECRET: string
+
+  // Optional platforms (chưa có key hoặc bị hạn chế)
+  REDDIT_CLIENT_ID?: string
+  REDDIT_CLIENT_SECRET?: string
+  TWITTER_BEARER_TOKEN?: string
   FACEBOOK_ACCESS_TOKEN?: string
 }

@@ -26,11 +26,28 @@ interface TikTokSearchResponse {
   error?: { code: string; message: string }
 }
 
-// Lấy app access token từ TikTok Research API
-const getAccessToken = async (apiKey: string): Promise<string | null> => {
-  // TikTok Research API dùng API key trực tiếp làm Bearer token
-  // Nếu dùng client credentials flow thì implement ở đây
-  return apiKey
+interface TikTokTokenResponse {
+  access_token?: string
+  error?: string
+  error_description?: string
+}
+
+// TikTok Research API dùng OAuth2 client credentials flow
+const getAccessToken = async (clientKey: string, clientSecret: string): Promise<string | null> => {
+  const res = await fetch(`${TIKTOK_BASE}/oauth/token/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_key: clientKey,
+      client_secret: clientSecret,
+      grant_type: "client_credentials"
+    })
+  })
+
+  if (!res.ok) return null
+
+  const data = (await res.json()) as TikTokTokenResponse
+  return data.access_token ?? null
 }
 
 export class TikTokScraper implements IScraper {
@@ -39,7 +56,7 @@ export class TikTokScraper implements IScraper {
   // targetId: hashtag slug, e.g. "thunhapthudong"
   async scrape(targetId: string, env: CloudflareEnv): Promise<ScraperResult> {
     try {
-      const token = await getAccessToken(env.TIKTOK_API_KEY)
+      const token = await getAccessToken(env.TIKTOK_CLIENT_KEY, env.TIKTOK_CLIENT_SECRET)
       if (!token) {
         return { success: false, error: "Cannot get TikTok access token", retryable: false }
       }
