@@ -1,8 +1,6 @@
 import { drizzle } from "@viral-scout/database"
 import { getActiveSources } from "@viral-scout/database"
 import type { CloudflareEnv } from "@viral-scout/types"
-
-import { handler } from "./.open-next/worker.js"
 import * as schema from "@viral-scout/database"
 
 // Fan-out scraper jobs từ cron trigger vào Queue
@@ -27,10 +25,6 @@ const fanOutScraperJobs = async (env: CloudflareEnv): Promise<void> => {
 }
 
 export default {
-  // Next.js app handler — OpenNext inject vào đây
-  fetch: handler.fetch,
-
-  // Cron trigger — chạy mỗi 2 giờ theo wrangler.jsonc
   async scheduled(_event, env, ctx): Promise<void> {
     ctx.waitUntil(fanOutScraperJobs(env))
   }

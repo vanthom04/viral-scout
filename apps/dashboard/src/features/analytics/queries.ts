@@ -1,14 +1,9 @@
 import { sql, desc, gte, eq } from "drizzle-orm"
-import { cacheLife, cacheTag } from "next/cache"
 
 import { getDb } from "@/lib/db"
 import { analyzedPosts, posts, tags, postTags, getViralityStats } from "@viral-scout/database"
 
 export const fetchAnalyticsData = async () => {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("posts")
-
   const db = await getDb()
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 3_600_000).toISOString()

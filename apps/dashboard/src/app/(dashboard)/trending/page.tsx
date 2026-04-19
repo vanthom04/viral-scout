@@ -1,5 +1,4 @@
 import { Suspense } from "react"
-import { cacheLife, cacheTag } from "next/cache"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { TrendingUp, Zap, Activity, BarChart } from "@hugeicons/core-free-icons"
 
@@ -18,10 +17,6 @@ export const metadata = {
 }
 
 async function fetchTrendingData() {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("posts")
-
   const db = await getDb()
   const [posts, stats] = await Promise.all([
     getViralPosts(db, { minVirality: 5, limit: 30 }),

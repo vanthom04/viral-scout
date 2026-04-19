@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server"
 
-import { getAuth } from "@/lib/auth"
-
 const PROTECTED_PREFIXES = ["/trending", "/analytics", "/monitor", "/idea-generator"]
 
-export async function proxy(request: NextRequest) {
+// Cookie name Better Auth dùng mặc định
+const SESSION_COOKIE = "better-auth.session_token"
+
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const isProtected = PROTECTED_PREFIXES.some(
@@ -14,14 +15,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next()
   }
 
-  const auth = await getAuth()
-  const session = await auth.api.getSession({
-    headers: request.headers
-  })
+  // Kiểm tra session cookie — full validation xảy ra ở Server Component
+  const hasSession = request.cookies.has(SESSION_COOKIE)
 
-  if (!session) {
+  if (!hasSession) {
     const loginUrl = new URL("/login", request.url)
-    // Redirect to root after login
     loginUrl.searchParams.set("callbackUrl", pathname)
     return NextResponse.redirect(loginUrl)
   }

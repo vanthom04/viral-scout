@@ -11,9 +11,11 @@ export const metadata = {
 
 // This component will handle dynamic logic
 async function AuthCheck() {
+  // Phải await headers() trước để thiết lập request context cho getCloudflareContext
+  const requestHeaders = await headers()
   const auth = await getAuth()
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: requestHeaders
   })
 
   if (session) {

@@ -1,5 +1,4 @@
 import { Suspense } from "react"
-import { cacheLife, cacheTag } from "next/cache"
 
 import { MonitorStatusTable } from "@/features/monitor/components/monitor-status-table"
 import { MonitorSummaryCards } from "@/features/monitor/components/monitor-summary-cards"
@@ -44,10 +43,6 @@ const MonitorPage = () => {
 export default MonitorPage
 
 export const MonitorContent = async () => {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("monitor-status")
-
   const db = await getDb()
   const [sources, healthSummary] = await Promise.all([getAllSources(db), getJobHealthSummary(db)])
 

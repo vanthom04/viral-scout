@@ -1,3 +1,4 @@
+export { drizzle } from "drizzle-orm/d1"
 export * from "./schema"
 export * from "./queries/posts.queries"
 export * from "./queries/sources.queries"
