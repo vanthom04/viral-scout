@@ -1,0 +1,64 @@
+# Viral Scout
+> Content intelligence platform — tự động cào dữ liệu viral từ mạng xã hội, phân tích bằng AI, giúp content creator Việt Nam gen ý tưởng content nhanh hơn.
+
+## Core Files
+
+- [CLAUDE.md]: Context tổng quan, quy tắc code, naming conventions, anti-patterns
+- [docs/architecture.md]: System diagram, data flow, ADR decisions
+- [docs/setup.md]: Hướng dẫn setup từ đầu đến deploy
+- [docs/scraper-guide.md]: Cách implement scraper mới cho platform mới
+
+## Packages
+
+- [packages/types/CLAUDE.md]: TypeScript types — CloudflareEnv, Platform, RawScrapedItem, AIAnalysisResult
+- [packages/types/src/env.types.ts]: CloudflareEnv interface (bindings + secrets)
+- [packages/types/src/scraper.types.ts]: IScraper, RawScrapedItem, ScraperResult, ScraperJob
+- [packages/types/src/post.types.ts]: RawPost, AnalyzedPost, ContentType, TagSlug, PostFilters
+- [packages/types/src/ai.types.ts]: AIAnalyzeInput/Output, isValidAIOutput, toAnalysisResult
+- [packages/database/CLAUDE.md]: Drizzle D1 schema + queries reference
+- [packages/database/src/schema.ts]: 7 bảng app — sources, posts, analyzed_posts, tags, post_tags, saved_ideas, cron_logs
+- [packages/database/src/queries/posts.queries.ts]: getViralPosts, getPostById, insertPost, upsertAnalyzedPost
+- [packages/database/src/queries/sources.queries.ts]: getActiveSources, getAllTags, insertPostTags
+- [packages/database/src/queries/cron-logs.queries.ts]: insertCronLog, getJobHealthSummary
+
+## Workers
+
+- [workers/scraper/CLAUDE.md]: Queue consumer — scraping pipeline, AI analysis, dedup
+- [workers/scraper/src/index.ts]: Entry — SCRAPERS registry, processJob(), queue handler
+- [workers/scraper/src/platforms/scraper.interface.ts]: IScraper interface, calcTotalEngagement
+- [workers/scraper/src/platforms/reddit.scraper.ts]: Reddit OAuth2 scraper
+- [workers/scraper/src/platforms/youtube.scraper.ts]: YouTube Data API v3 scraper
+- [workers/scraper/src/platforms/twitter.scraper.ts]: Twitter API v2 scraper
+- [workers/scraper/src/platforms/tiktok.scraper.ts]: TikTok Research API scraper
+- [workers/scraper/src/platforms/facebook.scraper.ts]: Facebook Graph API scraper
+- [workers/scraper/src/pipeline/analyzer.ts]: Workers AI classifier (8b) + analyzer (70b)
+- [workers/scraper/src/pipeline/normalizer.ts]: deduplicateAndInsert — dedup check + D1 insert
+- [workers/scraper/src/db/writes.ts]: saveAnalysis, logCronRun
+- [workers/scheduler/CLAUDE.md]: Cron trigger — fan-out ScraperJobs vào Queue
+
+## App (Next.js 16)
+
+- [apps/web/CLAUDE.md]: Context app — cấu trúc, Better Auth, shadcn components, gotchas
+- [apps/web/worker.ts]: CF Worker entry — fetch (Next.js) + scheduled (cron)
+- [apps/web/src/proxy.ts]: Route guard Next.js 16 — bảo vệ /dashboard/*
+- [apps/web/src/lib/auth.ts]: Better Auth server — singleton factory, disableSignUp
+- [apps/web/src/lib/auth-client.ts]: Better Auth client — signIn, signOut, useSession
+- [apps/web/src/lib/db.ts]: getDb() — Drizzle D1 helper
+- [apps/web/src/app/api/generate-idea/route.ts]: SSE streaming Workers AI
+- [apps/web/src/features/posts/]: Post domain — queries, actions, PostFeed, PostCard, TagFilterBar
+- [apps/web/src/features/idea-generator/]: Idea gen domain — streaming form + result
+- [apps/web/src/features/analytics/]: Analytics charts — platform breakdown, virality distribution
+
+## Key Concepts
+
+- **Scraper pipeline**: Cron → Queue fan-out → IScraper → Classifier → Dedup → Analyzer → D1
+- **Platform registry**: `SCRAPERS` map trong `workers/scraper/src/index.ts` — thêm scraper mới vào đây
+- **Virality score**: 1-10, gen bởi llama-3.3-70b, lưu trong `analyzed_posts.virality_score`
+- **Tag taxonomy**: 15 tags cố định trong `packages/types/src/post.types.ts` — TagSlug type
+- **Dedup**: Mỗi post identified bởi `(platform, external_id)` — không insert duplicate
+- **Better Auth**: `disableSignUp: true` — chỉ admin tạo tài khoản qua CLI/API
+- **OpenNext**: `getCloudflareContext({ async: true })` để access D1/AI/Queue từ Next.js
+
+## Stack
+
+Next.js 16 + React 19 + Tailwind CSS v4 + shadcn/ui + Better Auth + Drizzle ORM + Cloudflare D1 + Cloudflare Workers AI + Cloudflare Queues + OpenNext Cloudflare + pnpm + Turborepo

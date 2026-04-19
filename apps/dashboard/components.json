@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "radix-mira",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "baseColor": "neutral",
+    "css": "../../packages/ui/src/styles/globals.css",
+    "cssVariables": true
+  },
+  "iconLibrary": "hugeicons",
+  "aliases": {
+    "lib": "@/lib",
+    "hooks": "@/hooks",
+    "components": "@/components",
+    "utils": "@viral-scout/ui/lib/utils",
+    "ui": "@viral-scout/ui/components"
+  },
+  "rtl": false,
+  "menuColor": "default",
+  "menuAccent": "subtle"
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "viral-scout-scheduler",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-17",
+  "triggers": {
+    "crons": ["0 */2 * * *"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "viral-scout-db",
+      "database_id": "9b010f9c-6bb2-4b31-a6e1-788b690ba220"
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "queue": "scraper-queue",
+        "binding": "SCRAPER_QUEUE"
+      }
+    ]
+  }
+}

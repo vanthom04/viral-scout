@@ -1,0 +1,23 @@
+{
+  "name": "@viral-scout/scraper",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@viral-scout/types": "workspace:*",
+    "@viral-scout/database": "workspace:*",
+    "drizzle-orm": "^0.45.2",
+    "nanoid": "^5.1.9"
+  },
+  "devDependencies": {
+    "@viral-scout/eslint-config": "workspace:*",
+    "@viral-scout/typescript-config": "workspace:*",
+    "@cloudflare/workers-types": "^4.20260417.1",
+    "eslint": "^9.39.4",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.83.0"
+  }
+}

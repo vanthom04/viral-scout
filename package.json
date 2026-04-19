@@ -1,0 +1,30 @@
+{
+  "name": "viral-scout",
+  "description": "Viral Scout - AI-powered content analysis platform",
+  "version": "1.0.0",
+  "author": {
+    "name": "vanthom04",
+    "email": "vanthom04@gmail.com",
+    "url": "https://github.com/vanthom04"
+  },
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "deploy": "turbo deploy",
+    "preview": "turbo preview",
+    "typecheck": "turbo typecheck"
+  },
+  "devDependencies": {
+    "@viral-scout/eslint-config": "workspace:*",
+    "@viral-scout/typescript-config": "workspace:*",
+    "turbo": "^2.9.6",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

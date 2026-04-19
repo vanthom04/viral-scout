@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "viral-scout-scraper",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-17",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "viral-scout-db",
+      "database_id": "9b010f9c-6bb2-4b31-a6e1-788b690ba220"
+    }
+  ],
+  "queues": {
+    "consumers": [
+      {
+        "queue": "scraper-queue",
+        "max_batch_size": 10,
+        "max_batch_timeout": 30,
+        "max_retries": 3,
+        "dead_letter_queue": "scraper-dlq"
+      }
+    ]
+  },
+  "ai": {
+    "binding": "AI"
+  }
+}

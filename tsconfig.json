@@ -1,0 +1,3 @@
+{
+  "extends": "@viral-scout/typescript-config/base.json"
+}
