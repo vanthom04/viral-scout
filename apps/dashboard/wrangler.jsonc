@@ -27,6 +27,6 @@
     ]
   },
   "vars": {
-    "BETTER_AUTH_URL": "http://localhost:3000"
+    "BETTER_AUTH_URL": "https://viral-scout-dashboard.vanthom04.workers.dev"
   }
 }
